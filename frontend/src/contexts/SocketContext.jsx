@@ -6,6 +6,7 @@ const SocketContext = createContext()
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null)
   const [connected, setConnected] = useState(false)
+  //this is a comment
 
   useEffect(() => {
     // Initialize socket connection
