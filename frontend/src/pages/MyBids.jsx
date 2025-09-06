@@ -59,9 +59,11 @@ const MyBids = () => {
 
       switch (filter) {
         case 'active':
-          return item.status === 'active' && item.endTime > new Date()
+          // Use the same logic as ItemCard - check isActive virtual first, then fallback
+          const isActive = item.isActive !== undefined ? item.isActive : (item.status === 'active' && new Date(item.endTime) > new Date())
+          return isActive
         case 'ended':
-          return item.status === 'ended' || item.endTime <= new Date()
+          return item.status === 'ended' || new Date(item.endTime) <= new Date()
         case 'won':
           return item.winner?._id === user._id || item.winner?.email === user.email
         default:
@@ -88,7 +90,7 @@ const MyBids = () => {
     )
     
     const isWinning = highestBid.user?._id === user._id || highestBid.user?.email === user.email
-    const isEnded = item.status === 'ended' || item.endTime <= new Date()
+    const isEnded = item.status === 'ended' || new Date(item.endTime) <= new Date()
     
     if (isEnded) {
       return isWinning ? 'Won' : 'Lost'
@@ -226,7 +228,7 @@ const MyBids = () => {
                           <div className="flex items-center space-x-1">
                             <Clock className="h-4 w-4" />
                             <span>
-                              {item.endTime > new Date() 
+                              {new Date(item.endTime) > new Date() 
                                 ? `Ends ${formatDistanceToNow(new Date(item.endTime), { addSuffix: true })}`
                                 : 'Ended'
                               }
